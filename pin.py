@@ -1,5 +1,6 @@
 from dis import code_info
 
+
 # coding = utf-8
 
 
@@ -87,4 +88,18 @@ PC_EN = 1 << 16
 PC_OUT = PC_CS
 PC_IN = PC_CS | PC_WE
 PC_INC = PC_CS | PC_WE | PC_EN
+
+CYC = 1 << 30
 HLT = 1 << 31
+
+ADDR2 = 1 << 7 
+ADDR1 = 1 << 6
+
+ADDR2_SHIFT = 4 # 二地址指令的偏移
+ADDR1_SHIFT = 2 # 一地址指令的偏移
+
+AM_INS = 0 # 立即寻址
+AM_REG = 1 # 寄存器寻址
+AM_DIR = 2 # 直接寻址
+AM_RAM = 3 # 寄存器间接寻址
+
