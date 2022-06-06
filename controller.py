@@ -13,7 +13,7 @@ micro = [pin.HLT for _ in range(0x10000)]
 def compile_addr2(addr, ir, psw, idx):
     global micro
     op = ir & 0xf0
-    amd = ir & 0xc
+    amd = (ir >> 2) & 3
     ams = ir & 3
 
     INST = ASM.INSTRUCTIONS[2]
