@@ -98,7 +98,7 @@ ADDR1 = 1 << 6
 ADDR2_SHIFT = 4 # 二地址指令的偏移
 ADDR1_SHIFT = 2 # 一地址指令的偏移
 
-AM_INS = 0 # 立即寻址
+AM_INS = 0 # 立即寻址 addresing mode
 AM_REG = 1 # 寄存器寻址
 AM_DIR = 2 # 直接寻址
 AM_RAM = 3 # 寄存器间接寻址

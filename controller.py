@@ -13,7 +13,7 @@ micro = [pin.HLT for _ in range(0x10000)]
 def compile_addr2(addr, ir, psw, idx):
     global micro
     op = ir & 0xf0
-    amd = (ir & 0xc)
+    amd = ir & 0xc
     ams = ir & 3
 
     INST = ASM.INSTRUCTIONS[2]
@@ -25,7 +25,7 @@ def compile_addr2(addr, ir, psw, idx):
         micro[addr] = pin.CYC
         return
 
-    EXEC = INST[op][am]
+    EXEC = INST[op][am] 
     if idx < len(EXEC):
         micro[addr] = EXEC[idx]
     else:
@@ -39,7 +39,7 @@ def compile_addr0(addr, ir, psw, idx):
     global micro
     op = ir
 
-    INST = ASM.INSTRUCTIONS[2]
+    INST = ASM.INSTRUCTIONS[0]
     
     if op not in INST:
         micro[addr] = pin.CYC
