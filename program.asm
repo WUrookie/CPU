@@ -1,4 +1,8 @@
-MOV D, 0; 101
+MOV D, 1
 
-NOT D
+increase:
+    INC D;
+    JMP increase
+    
+
 hlt

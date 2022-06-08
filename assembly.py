@@ -1,6 +1,7 @@
 #coding = utf-8
 
 from filecmp import cmp
+from sre_constants import JUMP
 import pin
 
 FETCH = [
@@ -25,6 +26,8 @@ XOR = (6 << pin.ADDR2_SHIFT) | pin.ADDR2
 INC = (0 << pin.ADDR1_SHIFT) | pin.ADDR1
 DEC = (1 << pin.ADDR1_SHIFT) | pin.ADDR1
 NOT = (2 << pin.ADDR1_SHIFT) | pin.ADDR1
+JMP = (3 << pin.ADDR1_SHIFT) | pin.ADDR1
+
 NOP = 0
 HLT = 0x3f
 
@@ -179,6 +182,11 @@ INSTRUCTIONS = {
             pin.AM_REG:[
                 pin.DST_R | pin.A_IN,
                 pin.OP_NOT | pin.ALU_OUT | pin.ALU_PSW | pin.DST_W
+            ]
+        },
+        JMP:{
+            pin.AM_INS:[
+                pin.DST_OUT | pin.PC_IN
             ]
         }
     },

@@ -7,8 +7,7 @@ import re
 # coding = utf-8
 
 import os
-
-from sympy import assemble_partfrac_list
+from xml.dom import SyntaxErr
 import pin
 import assembly as ASM
 
@@ -21,6 +20,8 @@ outputfile = os.path.join(dirname, 'program.bin')
 # 一堆代码， 一行就是一个代码
 codes = []
 
+# 表示标记这一行的代码，就是重复部分部分的第一行
+marks = {}
 annotation = re.compile(r"(.*?);.*")
 
 OP2 = {
@@ -37,7 +38,8 @@ OP2 = {
 OP1 = {
     'INC':ASM.INC,
     'DEC':ASM.DEC,
-    'NOT':ASM.NOT
+    'NOT':ASM.NOT,
+    'JMP':ASM.JMP
 }
 
 OP0 = {
@@ -57,13 +59,18 @@ REGISTERS = {
 
 class Code(object):
 
-    def __init__(self, number, source):
+    TYPE_CODE = 1
+    TYPE_LABLE = 2
+
+    def __init__(self, number, source:str):
         self.number = number
         self.source = source.upper()
         self.op = None
         self.dst = None
         self.dst = None
         self.src = None
+        self.type = self.TYPE_CODE
+        self.index = 0 # 表示代码执行中的行位置
         self.prepare_source()
 
     def get_op(self):
@@ -76,8 +83,14 @@ class Code(object):
         raise SyntaxError(self)
 
     def get_am(self, addr):
+
+        global marks
+        
         if not addr:
             return None, None
+        if addr in marks:
+            return pin.AM_INS, marks[addr].index * 3
+            
         if addr in REGISTERS:
             return pin.AM_REG, REGISTERS[addr]
         if re.match(r'^[0-9]+$', addr):
@@ -99,6 +112,10 @@ class Code(object):
 
 
     def prepare_source(self):
+        if self.source.endswith(":"):
+            self.type = self.TYPE_LABLE
+            self.name = self.source.strip(":")
+            return 
         tup = self.source.split(',')
 
         if len(tup) > 2:
@@ -150,6 +167,9 @@ class SyntaxError(Exception):
 
 
 def compile_program():
+    global codes
+    global marks
+
     with open(inputfile,encoding='utf8') as file:
         lines = file.readlines()
     
@@ -162,9 +182,28 @@ def compile_program():
             continue
         code = Code(index + 1, source)
         codes.append(code)
-    
+    code = Code(index + 2, 'HLT')
+    codes.append(code) 
+    result = []
+
+    cur = None
+    # 表示上一行的代码，上一行！
+    for var in range(len(codes) - 1, -1, -1):
+        code = codes[var]
+        if code.type == Code.TYPE_CODE:
+            cur = code
+            result.insert(0,code)
+            continue
+        if code.type == Code.TYPE_LABLE:
+            marks[code.name] = cur
+            continue
+        raise SyntaxErr(code)
+
+    for index, var in enumerate(result):
+        var.index = index    
+
     with open(outputfile, 'wb') as file:
-        for code in codes:
+        for code in result:
             values = code.compile_code()
             for value in values:
                 result = value.to_bytes(1, byteorder = 'little')
