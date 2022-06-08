@@ -7,6 +7,8 @@ import re
 # coding = utf-8
 
 import os
+
+from sympy import assemble_partfrac_list
 import pin
 import assembly as ASM
 
@@ -24,12 +26,18 @@ annotation = re.compile(r"(.*?);.*")
 OP2 = {
     'MOV' : ASM.MOV,
     'ADD' : ASM.ADD,
-    'SUB' : ASM.SUB
+    'SUB' : ASM.SUB,
+    'CMP' : ASM.CMP,
+    'OR' : ASM.OR,
+    'XOR' : ASM.XOR,
+    'AND' : ASM.AND
+
 }
 
 OP1 = {
     'INC':ASM.INC,
-    'DEC':ASM.DEC
+    'DEC':ASM.DEC,
+    'NOT':ASM.NOT
 }
 
 OP0 = {

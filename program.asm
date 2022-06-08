@@ -1,8 +1,4 @@
-MOV D, 5
+MOV D, 0; 101
 
-
-DEC D
-DEC D
-DEC D
-DEC D
+NOT D
 hlt
