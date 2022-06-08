@@ -32,7 +32,24 @@ def compile_addr2(addr, ir, psw, idx):
         micro[addr] = pin.CYC    
 
 def compile_addr1(addr, ir, psw, idx):
-    pass
+    global micro
+    op = ir & 0xfc
+    amd = ir & 3
+
+    INST = ASM.INSTRUCTIONS[1]
+    if op not in INST:
+        micro[addr] = pin.CYC
+        return 
+
+    if amd not in INST[op]:
+        micro[addr] = pin.CYC
+        return
+
+    EXEC = INST[op][amd] 
+    if idx < len(EXEC):
+        micro[addr] = EXEC[idx]
+    else:
+        micro[addr] = pin.CYC
 
 def compile_addr0(addr, ir, psw, idx):
 
