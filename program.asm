@@ -1,8 +1,16 @@
-MOV D, 1
+MOV D, 0
 
 increase:
-    INC D;
-    JMP increase
-    
 
-hlt
+    INC D;
+    CMP D, 5
+    JO increase
+
+decrease:
+
+    DEC D
+    CMP D, 0
+    JZ increase
+    JMP decrease
+    
+    hlt

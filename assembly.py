@@ -1,7 +1,5 @@
 #coding = utf-8
 
-from filecmp import cmp
-from sre_constants import JUMP
 import pin
 
 FETCH = [
@@ -26,7 +24,15 @@ XOR = (6 << pin.ADDR2_SHIFT) | pin.ADDR2
 INC = (0 << pin.ADDR1_SHIFT) | pin.ADDR1
 DEC = (1 << pin.ADDR1_SHIFT) | pin.ADDR1
 NOT = (2 << pin.ADDR1_SHIFT) | pin.ADDR1
+
 JMP = (3 << pin.ADDR1_SHIFT) | pin.ADDR1
+
+JO = (4 << pin.ADDR1_SHIFT) | pin.ADDR1
+JNO = (5 << pin.ADDR1_SHIFT) | pin.ADDR1
+JZ = (6 << pin.ADDR1_SHIFT) | pin.ADDR1
+JNZ = (7 << pin.ADDR1_SHIFT) | pin.ADDR1
+JP = (8 << pin.ADDR1_SHIFT) | pin.ADDR1 # 奇跳转
+JNP = (9 << pin.ADDR1_SHIFT) | pin.ADDR1
 
 NOP = 0
 HLT = 0x3f
@@ -188,7 +194,37 @@ INSTRUCTIONS = {
             pin.AM_INS:[
                 pin.DST_OUT | pin.PC_IN
             ]
-        }
+        },
+        JO:{
+            pin.AM_INS:[
+                pin.DST_OUT | pin.PC_IN
+            ]
+        },
+        JNO:{
+            pin.AM_INS:[
+                pin.DST_OUT | pin.PC_IN
+            ]
+        },
+        JZ:{
+            pin.AM_INS:[
+                pin.DST_OUT | pin.PC_IN
+            ]
+        },
+        JNZ:{
+            pin.AM_INS:[
+                pin.DST_OUT | pin.PC_IN
+            ]
+        },
+        JP:{
+            pin.AM_INS:[
+                pin.DST_OUT | pin.PC_IN
+            ]
+        },
+        JNP:{
+            pin.AM_INS:[
+                pin.DST_OUT | pin.PC_IN
+            ]
+        },
     },
     0: {
         NOP: [

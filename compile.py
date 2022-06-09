@@ -7,7 +7,6 @@ import re
 # coding = utf-8
 
 import os
-from xml.dom import SyntaxErr
 import pin
 import assembly as ASM
 
@@ -39,7 +38,14 @@ OP1 = {
     'INC':ASM.INC,
     'DEC':ASM.DEC,
     'NOT':ASM.NOT,
-    'JMP':ASM.JMP
+    'JMP':ASM.JMP,
+
+    'JO':ASM.JO,
+    'JNO':ASM.JNO,
+    'JP':ASM.JP,
+    'JNP':ASM.JNP,
+    'JZ':ASM.JZ,
+    'JNZ':ASM.JNZ,
 }
 
 OP0 = {
@@ -197,7 +203,7 @@ def compile_program():
         if code.type == Code.TYPE_LABLE:
             marks[code.name] = cur
             continue
-        raise SyntaxErr(code)
+        raise SyntaxError(code)
 
     for index, var in enumerate(result):
         var.index = index    
