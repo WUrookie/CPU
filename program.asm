@@ -1,13 +1,18 @@
+  mov ss, 1
+    MOV SP, 0x20 ; [0, 0xf]
+    jmp start
 
-MOV SS, 1; 表示这一段栈的空间
-MOV SP, 0X10
-MOV D, 10
-PUSH D
-PUSH 1
+show:
+    mov d, 255;
+    ret; return;
 
-POP C
-POP B
-MOV A, C
+start:
+    mov c, 0
 
+increase:
+    inc c;
+    mov d, c;
+    call show
+    jmp increase
 
-hlt
+    HLT

@@ -1,7 +1,4 @@
 
-
-from ctypes.wintypes import PINT
-import math
 from sys import byteorder
 import re
 
@@ -48,12 +45,14 @@ OP1 = {
     'JZ':ASM.JZ,
     'JNZ':ASM.JNZ,
     'PUSH': ASM.PUSH,
-    'POP': ASM.POP
+    "POP" : ASM.POP,
+    "CALL": ASM.CALL
 }
 
 OP0 = {
     'NOP' : ASM.NOP,
     'HLT' : ASM.HLT,
+    "RET" : ASM.RET
 }
 OP2SET = set(OP2.values())
 OP1SET = set(OP1.values())

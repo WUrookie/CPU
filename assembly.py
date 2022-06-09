@@ -37,7 +37,11 @@ JNP = (9 << pin.ADDR1_SHIFT) | pin.ADDR1
 
 PUSH = (10 << pin.ADDR1_SHIFT) | pin.ADDR1
 POP = (11 << pin.ADDR1_SHIFT) | pin.ADDR1
+CALL = (12 << pin.ADDR1_SHIFT) | pin.ADDR1
+
+
 NOP = 0
+RET = 1
 HLT = 0x3f
 
 INSTRUCTIONS = {
@@ -250,13 +254,35 @@ INSTRUCTIONS = {
         },
         POP:{
             pin.AM_REG:[
+                pin.SP_OUT | pin.MAR_IN,
                 pin.SS_OUT | pin.MSR_IN, # 确定了栈的内存单元
-                pin.SP_OUT | pin.MAR_IN, 
                 pin.DST_W | pin.RAM_OUT,  
                 pin.SP_OUT | pin.A_IN,
                 pin.SP_IN | pin.ALU_OUT | pin.OP_INC, # 确定栈的指针
                 pin.CS_OUT | pin.MSR_IN # 还原成代码段
             ],
+        },
+        CALL:{
+            pin.AM_REG:[
+                pin.SP_OUT | pin.A_IN,
+                pin.SP_IN | pin.ALU_OUT | pin.OP_DEC,
+                pin.SP_OUT | pin.MAR_IN, # 确定栈的指针
+                
+                pin.SS_OUT | pin.MSR_IN, # 确定了栈的内存单元
+                pin.PC_OUT | pin.RAM_IN,
+                pin.DST_R | pin.PC_IN,
+                pin.CS_OUT | pin.MSR_IN # 还原成代码段
+            ],
+            pin.AM_INS:[
+                pin.SP_OUT | pin.A_IN,
+                pin.SP_IN | pin.ALU_OUT | pin.OP_DEC,
+                pin.SP_OUT | pin.MAR_IN, # 确定栈的指针
+                
+                pin.SS_OUT | pin.MSR_IN, # 确定了栈的内存单元
+                pin.PC_OUT | pin.RAM_IN,
+                pin.DST_OUT | pin.PC_IN,
+                pin.CS_OUT | pin.MSR_IN # 还原成代码段
+            ]
         },
         
 
@@ -267,6 +293,14 @@ INSTRUCTIONS = {
         ],
         HLT: [
             pin.HLT,
-        ]
+        ],
+        RET:[
+                pin.SP_OUT | pin.MAR_IN, 
+                pin.SS_OUT | pin.MSR_IN, # 确定了栈的内存单元
+                pin.PC_IN | pin.RAM_OUT,  
+                pin.SP_OUT | pin.A_IN,
+                pin.SP_IN | pin.ALU_OUT | pin.OP_INC, # 确定栈的指针
+                pin.CS_OUT | pin.MSR_IN # 还原成代码段
+            ],
     }
 }
