@@ -1,5 +1,6 @@
 
 
+from ctypes.wintypes import PINT
 import math
 from sys import byteorder
 import re
@@ -46,6 +47,8 @@ OP1 = {
     'JNP':ASM.JNP,
     'JZ':ASM.JZ,
     'JNZ':ASM.JNZ,
+    'PUSH': ASM.PUSH,
+    'POP': ASM.POP
 }
 
 OP0 = {
@@ -61,6 +64,9 @@ REGISTERS = {
     "B" : pin.B,
     "C" : pin.C,
     "D" : pin.D,
+    "SS" : pin.SS,
+    "CS" : pin.CS,
+    "SP" : pin.SP,
 }
 
 class Code(object):
@@ -217,7 +223,12 @@ def compile_program():
 
 def main():
     compile_program()
-    
+    try:
+        pass
+    except SyntaxError as e:
+        print(f'Synatax error at {e.code}')
+        return 
+
     
     print('compile program.asm finished!!')
 

@@ -1,16 +1,13 @@
-MOV D, 0
 
-increase:
+MOV SS, 1; 表示这一段栈的空间
+MOV SP, 0X10
+MOV D, 10
+PUSH D
+PUSH 1
 
-    INC D;
-    CMP D, 5
-    JO increase
+POP C
+POP B
+MOV A, C
 
-decrease:
 
-    DEC D
-    CMP D, 0
-    JZ increase
-    JMP decrease
-    
-    hlt
+hlt

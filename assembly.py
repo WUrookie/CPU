@@ -1,5 +1,6 @@
 #coding = utf-8
 
+from zmq import PUSH
 import pin
 
 FETCH = [
@@ -34,6 +35,8 @@ JNZ = (7 << pin.ADDR1_SHIFT) | pin.ADDR1
 JP = (8 << pin.ADDR1_SHIFT) | pin.ADDR1 # 奇跳转
 JNP = (9 << pin.ADDR1_SHIFT) | pin.ADDR1
 
+PUSH = (10 << pin.ADDR1_SHIFT) | pin.ADDR1
+POP = (11 << pin.ADDR1_SHIFT) | pin.ADDR1
 NOP = 0
 HLT = 0x3f
 
@@ -225,6 +228,38 @@ INSTRUCTIONS = {
                 pin.DST_OUT | pin.PC_IN
             ]
         },
+        PUSH:{
+            pin.AM_REG:[
+                pin.SP_OUT | pin.A_IN,
+                pin.SP_IN | pin.ALU_OUT | pin.OP_DEC,
+                pin.SP_OUT | pin.MAR_IN, # 确定栈的指针
+                
+                pin.SS_OUT | pin.MSR_IN, # 确定了栈的内存单元
+                pin.DST_R | pin.RAM_IN,
+                pin.CS_OUT | pin.MSR_IN # 还原成代码段
+            ],
+            pin.AM_INS:[
+                pin.SP_OUT | pin.A_IN,
+                pin.SP_IN | pin.ALU_OUT | pin.OP_DEC,
+                pin.SP_OUT | pin.MAR_IN, # 确定栈的指针
+                
+                pin.SS_OUT | pin.MSR_IN, # 确定了栈的内存单元
+                pin.DST_OUT | pin.RAM_IN,
+                pin.CS_OUT | pin.MSR_IN # 还原成代码段
+            ]
+        },
+        POP:{
+            pin.AM_REG:[
+                pin.SS_OUT | pin.MSR_IN, # 确定了栈的内存单元
+                pin.SP_OUT | pin.MAR_IN, 
+                pin.DST_W | pin.RAM_OUT,  
+                pin.SP_OUT | pin.A_IN,
+                pin.SP_IN | pin.ALU_OUT | pin.OP_INC, # 确定栈的指针
+                pin.CS_OUT | pin.MSR_IN # 还原成代码段
+            ],
+        },
+        
+
     },
     0: {
         NOP: [
